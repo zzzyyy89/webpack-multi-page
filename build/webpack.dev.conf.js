@@ -4,16 +4,15 @@ const webpack = require('webpack')
 const config = require('../config')
 const merge = require('webpack-merge')
 const path = require('path')
-const ps= require('./paths')
-const glob= require('glob')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 // const portfinder = require('portfinder')
 //
 // const HOST = process.env.HOST
 // const PORT = process.env.PORT && Number(process.env.PORT)
+
+const multiWebpackConfig= require('./multi.conf')()
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -69,27 +68,29 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       }
     ])
   ]
-})
+},multiWebpackConfig)
 
-glob.sync(ps.sourceJs).forEach(function (f) {
-  let name=ps.sourceJsTemp.exec(f)[1]
-  // let to=path.resolve(__dirname,'../'+name+'.html')
-  // console.log('output',name)
-  let plugin=new HtmlWebpackPlugin({
-    filename:name+'.html',
-    // chunks:['vendor',name],
-    template:ps.htmlTemplate,
-    inject:true,
-    chunks:[name]
-  })
-  devWebpackConfig.plugins.push(plugin)
-})
+// glob.sync(ps.sourceJs).forEach(function (f) {
+//   let name=ps.sourceJsTemp.exec(f)[1]
+//   // let to=path.resolve(__dirname,'../'+name+'.html')
+//   // console.log('output',name)
+//   let plugin=new HtmlWebpackPlugin({
+//     filename:name+'.html',
+//     // chunks:['vendor',name],
+//     template:ps.htmlTemplate,
+//     inject:true,
+//     chunks:[name]
+//   })
+//   devWebpackConfig.plugins.push(plugin)
+// })
 
 Object.keys(devWebpackConfig.entry).forEach(function (name) {
   if(name!=='vendor'){
-    devWebpackConfig.entry[name]=['./build/dev-client'].concat(baseWebpackConfig.entry[name])
+    devWebpackConfig.entry[name]=['./build/dev-client'].concat(multiWebpackConfig.entry[name])
   }
 })
+
+// console.log('dev final config:',devWebpackConfig)
 
 module.exports=devWebpackConfig
 

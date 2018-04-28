@@ -1,28 +1,27 @@
 'use strict'
 const path = require('path')
-const ps=require('./paths')
 const utils = require('./utils')
 const config = require('../config')
-const glob=require('glob')
 const vueLoaderConfig = require('./vue-loader.conf')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
-const entryFiles=glob.sync(ps.sourceJs)
-const entries={}
-entryFiles.forEach(function (f) {
-  entries[ps.sourceJsTemp.exec(f)[1]]=f
-})
-
-entries['vendor']=ps.vendors
+// const entryFiles=glob.sync(ps.sourceJs)
+// const entries={}
+// entryFiles.forEach(function (f) {
+//   console.log(path.resolve(f),ps.sourceJsTemp)
+//   entries[ps.sourceJsTemp.exec(f)[1]]=f
+// })
+//
+// entries['vendor']=ps.vendors
 
 // console.log('entry:',entries)
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
-  entry: entries,
+  entry: {},
   // entry: {
   //   app: './src/main.js'
   // },

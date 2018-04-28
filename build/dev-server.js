@@ -3,11 +3,12 @@ const path=require('path')
 const express =require('express')
 const opn=require('opn')
 
-const ps=require('./paths')
+// const ps=require('./paths')
+const multiConfig=require('../config/multi')
 const config = require('../config')
 const devWebpackConfig=require('./webpack.dev.conf')
 const PORT = (process.env.PORT && Number(process.env.PORT))||config.dev.port
-const HOST = process.env.HOST || config.dev.host
+// const HOST = process.env.HOST || config.dev.host
 const autoOpenBrowser = !!config.dev.autoOpenBrowser
 
 const app=express()
@@ -35,13 +36,13 @@ app.use(staticPath, express.static('./static'))
 
 app.get('/:viewname?',function (req,res,next) {
   let viewName=req.params.viewname
-  let target=(!viewName||viewName.indexOf('/')>0||/\D+\.\D+/.test(viewName))?'':'apps/'+viewName+'/index.html'
+  let target=(!viewName||viewName.indexOf('/')>0||/\D+\.\D+/.test(viewName))?'':viewName+'/index.html'
   // console.log('tg:',target)
   if(!target){
     // console.log('shame ignore')
     return next();
   }
-  let fPath=path.join(compiler.outputPath,target)
+  let fPath=path.join(compiler.outputPath,multiConfig.sourceScheme,target)
   console.log('to:',fPath)
   // compiler.outputFileSytstem.readdir(compiler.outputPath,function (e,file) {
   //   console.log('fs',file)
